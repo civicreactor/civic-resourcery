@@ -21,4 +21,14 @@ needed global installation, will remove later
     
     $ yarn global remove ionic
     
+### Creating database rules
+
+You needed to be logged in (yern run firebase login) first.
+
+To initialize the project for firebase:
+
+    $ yarn run firebase init
+
+For this project "Hosting" and "Firestore" were enabled, see 'firebase.json' for
+the rest of the configuration specified.
 
