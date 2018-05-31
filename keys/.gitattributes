@@ -1,0 +1,3 @@
+admin-key.*.asz.json filter=git-crypt-env-asz diff=git-crypt-env-asz
+admin-key.staging.json filter=git-crypt-env-staging diff=git-crypt-env-staging
+admin-key.production.json filter=git-crypt-env-production diff=git-crypt-env-production

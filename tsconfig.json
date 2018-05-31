@@ -1,17 +1,23 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
+    "baseUrl": "./src",
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "paths": {
+      "@env/*": [
+        "environments/*"
+      ]
+    },
     "lib": [
       "dom",
-      "es2015"
+      "es2016"
     ],
     "module": "es2015",
     "moduleResolution": "node",
     "sourceMap": true,
-    "target": "es5"
+    "target": "es2015"
   },
   "include": [
     "src/**/*.ts"
@@ -20,6 +26,9 @@
     "node_modules",
     "src/**/*.spec.ts",
     "src/**/__tests__/*.ts"
+  ],
+  "typeRoots": [
+    "node_modules/@types"
   ],
   "compileOnSave": false,
   "atom": {

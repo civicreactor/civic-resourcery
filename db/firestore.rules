@@ -3,5 +3,9 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
+
+    match /app-metadata/name {
+      allow read: if true;
+    }
   }
 }
