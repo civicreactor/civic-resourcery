@@ -26,6 +26,9 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
+      - run: echo "$FILE___SRC__ENVIRONMENTS__ENVIRONMENT_TEST_TS" | base64 --decode > ./src/environments/environment.test.ts
+      - run: echo "$FILE___KEYS__ADMIN_KEY_TEST_JSON" | base64 --decode > ./keys/admin-key.test.json
+
       - run: yarn install
 
       - save_cache:
@@ -34,4 +37,4 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: yarn run firebase deploy --token $FIREBASE_TOKEN --project civic-resourcery-circleci-test
+      - run: yarn test:ci
