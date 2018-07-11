@@ -12,7 +12,8 @@
     "ionic:serve": "ionic-app-scripts serve",
     "test": "jest",
     "test:unit": "jest",
-    "test:integration": "yarn firebase -P test deploy && jest --testRegex '/__int_tests__/.*.tsx?$' --setupTestFrameworkScriptFile './config/jest.integration.js'"
+    "test:integration": "yarn firebase -P test deploy && jest --testRegex '/__int_tests__/.*.tsx?$' --setupTestFrameworkScriptFile './config/jest.integration.js'",
+    "test:ci": "yarn firebase --token $FIREBASE_TOKEN --project $FIREBASE_PROJECT deploy && jest --testRegex '/__int_tests__/.*.tsx?$' --setupTestFrameworkScriptFile './config/jest.integration.js'"
   },
   "config": {
     "ionic_webpack": "./config/webpack.config.js"
