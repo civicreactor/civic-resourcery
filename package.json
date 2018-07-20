@@ -13,7 +13,8 @@
     "test": "jest",
     "test:unit": "jest",
     "test:integration": "yarn firebase -P test deploy && jest --testRegex '/__int_tests__/.*.tsx?$' --setupTestFrameworkScriptFile './config/jest.integration.js'",
-    "test:ci": "yarn firebase --token $FIREBASE_TOKEN --project $FIREBASE_PROJECT deploy && jest --testRegex '/__int_tests__/.*.tsx?$' --setupTestFrameworkScriptFile './config/jest.integration.js'"
+    "test:ci": "yarn deploy:ci && jest --testRegex '/__int_tests__/.*.tsx?$' --setupTestFrameworkScriptFile './config/jest.integration.js'",
+    "deploy:ci": "yarn firebase --token $FIREBASE_TOKEN --project $FIREBASE_PROJECT deploy"
   },
   "config": {
     "ionic_webpack": "./config/webpack.config.js"

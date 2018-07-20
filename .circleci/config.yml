@@ -6,24 +6,16 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
       - image: circleci/node:8.11.3
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
 
     working_directory: ~/repo
 
     steps:
       - checkout
 
-      # Download and cache dependencies
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
       - run: echo "$FILE___SRC__ENVIRONMENTS__ENVIRONMENT_TEST_TS" | base64 --decode > ./src/environments/environment.test.ts
@@ -36,5 +28,90 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      # run tests!
-      - run: yarn test:ci
+      - run:
+          name: Testing
+          command: FIREBASE_TOKEN="$ENV_TEST__FIREBASE_TOKEN" yarn test:ci
+          environment:
+            - FIREBASE_PROJECT: civic-resourcery-circleci-test
+
+  deploy_staging:
+    docker:
+      - image: circleci/node:8.11.3
+
+    working_directory: ~/repo
+
+    environment:
+      - FIREBASE_TOKEN: $ENV_STAGE__FIREBASE_TOKEN
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
+
+      - run: yarn install
+      - run:
+          name: deploy
+          command: FIREBASE_TOKEN="$ENV_STAGING__FIREBASE_TOKEN" yarn deploy:ci
+          environment:
+            - FIREBASE_PROJECT: civic-resourcery-staging
+
+  deploy_prod:
+    docker:
+      - image: circleci/node:8.11.3
+
+    working_directory: ~/repo
+
+    environment:
+      - FIREBASE_TOKEN: $ENV_PROD__FIREBASE_TOKEN
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
+
+      - run: yarn install
+      - run:
+          name: deploy
+          command: FIREBASE_TOKEN="$ENV_PROD__FIREBASE_TOKEN" yarn deploy:ci
+          environment:
+            - FIREBASE_PROJECT: civic-resourcery
+
+workflows:
+  version: 2
+  build_stage_prod:
+    jobs:
+      - build
+
+      - approve_staging:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+                - stage
+
+      - deploy_staging:
+          requires:
+            - approve_staging
+
+      - approve_prod:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+                - prod
+
+      - deploy_prod:
+          requires:
+            - approve_prod
